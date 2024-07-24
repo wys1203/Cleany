@@ -17,6 +17,7 @@ limitations under the License.
 package v1alpha1
 
 import (
+	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -25,11 +26,11 @@ import (
 
 // CleaningReportSpec defines the desired state of CleaningReport
 type CleaningReportSpec struct {
-	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
+	// Resources identify a set of Kubernetes resource
+	ResourceInfo []ResourceInfo `json:"resourceInfo"`
 
-	// Foo is an example field of CleaningReport. Edit cleaningreport_types.go to remove/update
-	Foo string `json:"foo,omitempty"`
+	// Action indicates the action to take on selected object.
+	Action Action `json:"action"`
 }
 
 // CleaningReportStatus defines the observed state of CleaningReport
@@ -61,4 +62,18 @@ type CleaningReportList struct {
 
 func init() {
 	SchemeBuilder.Register(&CleaningReport{}, &CleaningReportList{})
+}
+
+type ResourceInfo struct {
+	// Resource identify a Kubernetes resource
+	Resource corev1.ObjectReference `json:"resource,omitempty"`
+
+	// FullResource contains full resources before
+	// before Cleaner took an action on it
+	// +optional
+	FullResource []byte `json:"fullResource,omitempty"`
+
+	// Message is an optional field.
+	// +optional
+	Message string `json:"message,omitempty"`
 }
