@@ -37,6 +37,7 @@ import (
 
 	cleanyv1alpha1 "github.com/wys1203/Cleany/api/cleany/v1alpha1"
 	cleanycontroller "github.com/wys1203/Cleany/internal/controller/cleany"
+	"github.com/wys1203/Cleany/internal/manager"
 	// +kubebuilder:scaffold:imports
 )
 
@@ -151,6 +152,9 @@ func main() {
 		setupLog.Error(err, "unable to create controller", "controller", "Cleaner")
 		os.Exit(1)
 	}
+
+	mgr = manager.NewCleanerManager(mgr, 5)
+
 	// +kubebuilder:scaffold:builder
 
 	if err := mgr.AddHealthzCheck("healthz", healthz.Ping); err != nil {
