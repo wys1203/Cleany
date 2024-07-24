@@ -1,0 +1,23 @@
+# permissions for end users to view cleaningreports.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app.kubernetes.io/name: cleany
+    app.kubernetes.io/managed-by: kustomize
+  name: cleany-cleaningreport-viewer-role
+rules:
+- apiGroups:
+  - cleany.wys1203.com
+  resources:
+  - cleaningreports
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - cleany.wys1203.com
+  resources:
+  - cleaningreports/status
+  verbs:
+  - get

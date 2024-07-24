@@ -8,4 +8,22 @@ layout:
 multigroup: true
 projectName: cleany
 repo: github.com/wys1203/Cleany
+resources:
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: wys1203.com
+  group: cleany
+  kind: Cleaner
+  path: github.com/wys1203/Cleany/api/cleany/v1alpha1
+  version: v1alpha1
+- api:
+    crdVersion: v1
+    namespaced: true
+  domain: wys1203.com
+  group: cleany
+  kind: CleaningReport
+  path: github.com/wys1203/Cleany/api/cleany/v1alpha1
+  version: v1alpha1
 version: "3"

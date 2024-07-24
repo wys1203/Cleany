@@ -1,0 +1,9 @@
+apiVersion: cleany.wys1203.com/v1alpha1
+kind: Cleaner
+metadata:
+  labels:
+    app.kubernetes.io/name: cleany
+    app.kubernetes.io/managed-by: kustomize
+  name: cleaner-sample
+spec:
+  # TODO(user): Add fields here

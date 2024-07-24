@@ -1,0 +1,5 @@
+## Append samples of your project ##
+resources:
+- cleany_v1alpha1_cleaner.yaml
+- cleany_v1alpha1_cleaningreport.yaml
+# +kubebuilder:scaffold:manifestskustomizesamples
