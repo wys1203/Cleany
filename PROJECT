@@ -5,6 +5,7 @@
 domain: wys1203.com
 layout:
 - go.kubebuilder.io/v4
+multigroup: true
 projectName: cleany
 repo: github.com/wys1203/Cleany
 version: "3"
