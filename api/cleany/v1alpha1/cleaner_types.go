@@ -46,24 +46,6 @@ type CleanerSpec struct {
 
 	// Schedule in Cron format, see https://en.wikipedia.org/wiki/Cron.
 	Schedule string `json:"schedule"`
-
-	// Optional deadline in seconds for starting the job if it misses scheduled
-	// time for any reason.  Missed jobs executions will be counted as failed ones.
-	// +optional
-	StartingDeadlineSeconds *int64 `json:"startingDeadlineSeconds,omitempty"`
-
-	// Notification is a list of source of events to evaluate.
-	// +patchMergeKey=name
-	// +patchStrategy=merge,retainKeys
-	// +listType=map
-	// +listMapKey=name
-	// +optional
-	// Notifications []Notification `json:"notifications,omitempty" patchStrategy:"merge" patchMergeKey:"name"`
-
-	// StoreResources will store full resources in this directory.
-	// Must be a volume where Cleaner can dump all matching resources.
-	// +optional
-	StoreResourcePath string `json:"storeResourcePath,omitempty"`
 }
 
 // CleanerStatus defines the observed state of Cleaner
