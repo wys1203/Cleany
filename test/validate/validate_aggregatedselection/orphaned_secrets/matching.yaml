@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: matching
+  namespace: baz
+type: Opaque
+data:
+  username: foo

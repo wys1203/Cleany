@@ -1,0 +1,64 @@
+# This Cleaner instance will find any deployment all namespaces
+# with has no associated Autoscaler and instructs Cleaner to
+# delete those instances
+apiVersion: apps.projectsveltos.io/v1alpha1
+kind: Cleaner
+metadata:
+  name: deployment-with-no-autoscaler
+spec:
+  schedule: "* 0 * * *"
+  action: Delete # Delete matching resources
+  resourcePolicySet:
+    resourceSelectors:
+    - kind: Deployment
+      group: "apps"
+      version: v1
+    - kind: HorizontalPodAutoscaler
+      group: "autoscaling"
+      version: v2
+    aggregatedSelection: |
+      function evaluate()
+        local hs = {}
+        hs.message = ""
+
+        local deployments = {}
+        local autoscalers = {}
+        local deploymentWithNoAutoscaler = {}
+
+        -- Separate deployments and services from the resources
+        for _, resource in ipairs(resources) do
+          local kind = resource.kind
+          if kind == "Deployment" then
+            table.insert(deployments, resource)
+          elseif kind == "HorizontalPodAutoscaler" then
+            if resource.spec.scaleTargetRef.kind == "Deployment" then
+              table.insert(autoscalers, resource)
+            end
+          end
+        end
+
+        -- Check for each deployment if there is a matching HorizontalPodAutoscaler
+        for _, deployment in ipairs(deployments) do
+            local deploymentName = deployment.metadata.name
+            local matchingAutoscaler = false
+
+            for _, autoscaler in ipairs(autoscalers) do
+              if autoscaler.metadata.namespace == deployment.metadata.namespace then
+                if autoscaler.spec.scaleTargetRef.name == deployment.metadata.name then
+                  matchingAutoscaler = true
+                  break
+                end
+              end
+            end
+
+            if not matchingAutoscaler then
+                table.insert(deploymentWithNoAutoscaler, {resource = deployment})
+                break
+            end
+        end
+
+        if #deploymentWithNoAutoscaler > 0 then
+          hs.resources = deploymentWithNoAutoscaler
+        end
+        return hs
+      end
