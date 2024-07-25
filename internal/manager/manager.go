@@ -6,9 +6,10 @@ import (
 	"sync"
 	"time"
 
+	"sigs.k8s.io/controller-runtime/pkg/manager"
+
 	cleanyv1alpha1 "github.com/wys1203/Cleany/api/cleany/v1alpha1"
 	"github.com/wys1203/Cleany/internal/executor"
-	"sigs.k8s.io/controller-runtime/pkg/manager"
 )
 
 const (
@@ -99,8 +100,13 @@ func (c *CleanerManager) worker(ctx context.Context) {
 			taskCtx, cancel := context.WithTimeout(ctx, 1*time.Minute)
 
 			go func() {
-
-				if err := executor.Execute(taskCtx, task.Cleaner, c.Manager.GetClient(), c.Manager.GetScheme(), c.Manager.GetConfig()); err != nil {
+				exe, err := executor.NewExecutor(taskCtx, task.Name, c.Manager.GetConfig(), c.Manager.GetClient(), c.Manager.GetScheme())
+				if err != nil {
+					log.Printf("error creating executor for %s: %v", task.Name, err)
+					cancel()
+					return
+				}
+				if err := exe.Run(taskCtx); err != nil {
 					log.Printf("error cleaning %s: %v", task.Name, err)
 				}
 				cancel() // Ensure resources are released once Execute is done.
